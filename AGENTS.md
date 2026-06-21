@@ -7,7 +7,7 @@ Cloudflare Image MCP is an image generation service deployed as a **Cloudflare W
 - **OpenAI-compatible REST API** (`/v1/images/*`)
 - **MCP Server** (Model Context Protocol) over **HTTP** (with optional **SSE** transport)
 - **Web Frontend** for image generation
-- **R2 Storage** for generated images with auto-expiry
+- **MinIO S3 Storage** for generated images with auto-expiry
 
 ## Tech Stack
 
@@ -16,7 +16,7 @@ Cloudflare Image MCP is an image generation service deployed as a **Cloudflare W
 | **Runtime** | Cloudflare Workers |
 | **Language** | TypeScript |
 | **AI Provider** | Cloudflare Workers AI |
-| **Storage** | Cloudflare R2 |
+| **Storage** | MinIO (S3-compatible) |
 | **Protocols** | OpenAI REST API, MCP (HTTP/SSE) |
 | **Frontend** | HTML + Tailwind CSS (bundled in Worker) |
 | **Testing** | Playwright (E2E against staging/production) |

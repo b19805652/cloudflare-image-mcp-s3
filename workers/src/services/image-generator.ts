@@ -253,7 +253,7 @@ export class ImageGeneratorService {
         };
       }
 
-      // Upload to R2 storage
+      // Upload to S3/MinIO storage
       const uploadResult = await this.storage.uploadImage(
         extracted.kind === 'base64' ? this.cleanBase64(extracted.data) : extracted.data,
         {

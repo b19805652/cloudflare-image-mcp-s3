@@ -35,7 +35,6 @@ You need **2 values** from your Cloudflare dashboard:
 |---------|-------|
 | Token name | `Cloudflare Image MCP Deploy` |
 | Permissions | `Account` → `Workers Scripts` → `Edit` |
-| | `Account` → `Workers R2 Storage` → `Edit` |
 | | `Account` → `Workers AI` → `Edit` |
 | | `Account` → `Workers AI` → `Read` |
 | Account Resources | Include: `<your account>` |
@@ -59,6 +58,11 @@ Click **New repository secret** and add these:
 |-------------|-------|----------|
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare Account ID | Yes |
 | `CLOUDFLARE_API_TOKEN` | The API token you just created | Yes |
+| `MINIO_ENDPOINT` | The URL of your VPS MinIO API (e.g., `https://minio-api.yourdomain.com`) | Yes |
+| `MINIO_ACCESS_KEY_ID` | Access key configured in MinIO / Coolify | Yes |
+| `MINIO_SECRET_ACCESS_KEY` | Secret key configured in MinIO / Coolify | Yes |
+| `MINIO_BUCKET_NAME` | Bucket name (defaults to `image-generation` if not set) | Optional |
+| `MINIO_REGION` | Storage region (defaults to `us-east-1` if not set) | Optional |
 | `API_KEYS` | Comma-separated list of API keys (e.g., `key1,key2,key3`) | Optional |
 | `AI_ACCOUNTS` | JSON array of `{"account_id","api_token"}` for multi-account AI inference (see [Credentials Setup](CREDENTIALS_SETUP.md#ai_accounts-format)) | Optional |
 | `TZ` | Your timezone (e.g., `America/New_York`, `Asia/Singapore`) | Optional |
@@ -117,7 +121,9 @@ The file `.github/workflows/deploy-workers.yml` handles everything:
 | Issue | Solution |
 |-------|----------|
 | `Authentication error` | Check that `CLOUDFLARE_API_TOKEN` has the correct permissions |
-| `R2 bucket not found` | Create an R2 bucket named `image-generation` in your Cloudflare dashboard, or update `bucket_name` in the workflow |
+| `MinIO SignatureDoesNotMatch` | Check that `MINIO_ACCESS_KEY_ID` and `MINIO_SECRET_ACCESS_KEY` are correct and match your Coolify config |
+| `MinIO Endpoint unreachable`| Ensure the MinIO service is running in Coolify and accessible from the public internet |
+| `MinIO Bucket not found` | Verify that the bucket has been created in MinIO Console (default `image-generation`) |
 | `Workers AI not enabled` | Go to Cloudflare Dashboard → AI → Workers AI and accept the terms |
 | `Deployment failed` | Check the Actions logs for specific error messages |
 

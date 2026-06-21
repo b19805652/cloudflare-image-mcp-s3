@@ -20,7 +20,6 @@ Create a token with these **Account-scoped** permissions:
 | Scope | Permission |
 |-------|------------|
 | Account | Workers Scripts — Edit |
-| Account | Workers R2 Storage — Edit |
 | Account | Workers AI — Edit |
 | Account | Workers AI — Read |
 

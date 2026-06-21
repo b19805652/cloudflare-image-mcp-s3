@@ -91,7 +91,7 @@ Generate images from text prompts.
   "created": 1704067200,
   "data": [
     {
-      "url": "https://pub-xxx.r2.dev/images/abc123.png",
+      "url": "https://your-worker.workers.dev/images/2026-06-21/abc1234-xyz.png",
       "revised_prompt": "A beautiful sunset over mountains"
     }
   ]

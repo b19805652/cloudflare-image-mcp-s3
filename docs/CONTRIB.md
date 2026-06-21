@@ -6,7 +6,7 @@ Cloudflare Image MCP is an image generation service that provides:
 - OpenAI-compatible REST API
 - MCP Server (Model Context Protocol) over HTTP/SSE
 - Web Frontend for image generation
-- R2 Storage for generated images with auto-expiry
+- MinIO Storage for generated images with auto-expiry
 
 ## Tech Stack
 
@@ -15,7 +15,7 @@ Cloudflare Image MCP is an image generation service that provides:
 | **Runtime** | Node.js 18+ (local), Cloudflare Workers (cloud) |
 | **Language** | TypeScript |
 | **AI Provider** | Cloudflare Workers AI (FLUX, SDXL, @cf/lykon/dreamshaper-8-lcm) |
-| **Storage** | Cloudflare R2 (S3-compatible) |
+| **Storage** | MinIO (S3-compatible) |
 | **Protocols** | OpenAI REST API, MCP (HTTP/SSE) |
 | **Frontend** | HTML + Tailwind CSS (no framework) |
 
@@ -65,7 +65,7 @@ For local development (wrangler):
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-R2 + AI are configured via `workers/wrangler.toml` bindings for local development. In CI, `workers/wrangler.toml` is generated dynamically by `.github/workflows/deploy-workers.yml`.
+MinIO + AI credentials are configured via environment variables. In CI, `workers/wrangler.toml` is generated dynamically by `.github/workflows/deploy-workers.yml`.
 
 ### 3. Develop and Test
 
@@ -143,11 +143,11 @@ cd workers && npm run check
 Ensure your API token has the following permissions:
 - `Workers AI: Read`
 - `Workers AI: Write` (for image generation)
-- `Account R2: Read/Write` (for storage)
+- `MinIO Access Key & Secret` (for S3 storage)
 
-### R2 Access Issues
+### MinIO Access Issues
 
-Verify your R2 endpoint and credentials in `.env`. The endpoint should be:
+Verify your MinIO endpoint and credentials in GitHub Secrets or your local environment. The endpoint should be:
 ```
-https://<account-id>.r2.cloudflarestorage.com
+https://minio-api.yourdomain.com
 ```

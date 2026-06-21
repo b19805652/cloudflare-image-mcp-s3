@@ -211,7 +211,7 @@ Invokes a tool.
     "content": [
       {
         "type": "text",
-        "text": "Image generated successfully!\n\n![Generated Image](https://pub-xxx.r2.dev/images/abc123.png)"
+        "text": "Image generated successfully!\n\n![Generated Image](https://your-worker.workers.dev/images/2026-06-21/abc1234-xyz.png)"
       }
     ]
   }

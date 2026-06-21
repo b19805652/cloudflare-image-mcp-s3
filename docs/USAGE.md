@@ -204,11 +204,11 @@ curl -X POST "https://your-worker.workers.dev/mcp/message" \
 
 ## Image Storage
 
-Generated images are stored in Cloudflare R2 with automatic expiration.
+Generated images are stored in a self-hosted MinIO (S3-compatible) storage bucket with automatic expiration.
 
 ### Storage Details
 
-- **Bucket**: Bound as `IMAGE_BUCKET` (local dev via `workers/wrangler.toml`; CI generates config during deploy)
+- **Bucket**: Managed via S3 bucket connection parameters (e.g. `MINIO_BUCKET_NAME`)
 - **Expiry**: 24 hours (configurable via `IMAGE_EXPIRY_HOURS`)
 - **Access**: Via worker proxy URL (`/images/...`)
 
@@ -311,7 +311,7 @@ print(result['result']['content'][0]['text'])
 ### 500 Internal Error
 
 - Check worker logs: `npx wrangler deploy --log-level debug`
-- Verify R2 bucket is configured correctly
+- Verify MinIO/S3 connection parameters are configured correctly
 
 ### MCP Connection Failed
 
@@ -322,4 +322,4 @@ print(result['result']['content'][0]['text'])
 ### Images Not Loading
 
 - Check if image has expired (24 hour TTL)
-- Verify R2 bucket is accessible through the worker
+- Verify MinIO bucket is accessible through the worker
