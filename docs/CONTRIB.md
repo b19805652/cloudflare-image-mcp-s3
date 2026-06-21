@@ -51,8 +51,8 @@ cloudflare-image-mcp/
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/yourusername/cloudflare-image-mcp.git
-cd cloudflare-image-mcp
+git clone https://github.com/yourusername/cloudflare-image-mcp-s3.git
+cd cloudflare-image-mcp-s3
 
 cd workers && npm ci && cd ..
 cd e2e && npm ci && cd ..

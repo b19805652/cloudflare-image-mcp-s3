@@ -50,7 +50,7 @@ You need **2 values** from your Cloudflare dashboard:
 Go to your forked repository and add the credentials:
 
 ```
-https://github.com/YOUR_USERNAME/cloudflare-image-mcp/settings/secrets/actions
+https://github.com/YOUR_USERNAME/cloudflare-image-mcp-s3/settings/secrets/actions
 ```
 
 Click **New repository secret** and add these:

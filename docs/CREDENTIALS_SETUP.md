@@ -58,7 +58,7 @@ If `AI_ACCOUNTS` is **not set**, the worker falls back to `CLOUDFLARE_ACCOUNT_ID
 Add as repository secrets:
 
 ```
-https://github.com/YOUR_USERNAME/cloudflare-image-mcp/settings/secrets/actions
+https://github.com/YOUR_USERNAME/cloudflare-image-mcp-s3/settings/secrets/actions
 ```
 
 ### Local Development

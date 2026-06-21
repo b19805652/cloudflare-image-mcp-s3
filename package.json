@@ -1,5 +1,5 @@
 {
-  "name": "cloudflare-image-mcp",
+  "name": "cloudflare-image-mcp-s3",
   "version": "0.1.0",
   "description": "Cloudflare Image MCP - OpenAI-compatible image generation with MCP support",
   "author": "tan-yong-sheng",
