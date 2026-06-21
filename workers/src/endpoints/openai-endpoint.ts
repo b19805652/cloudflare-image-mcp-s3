@@ -52,7 +52,12 @@ export class OpenAIEndpoint {
     const path = url.pathname;
     
     // Normalize path by removing trailing slash if present (except for root '/')
-    const normalizedPath = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+    let normalizedPath = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+
+    // Rewrite fallback routes (e.g. /images/generations -> /v1/images/generations)
+    if (normalizedPath.startsWith('/images/')) {
+      normalizedPath = '/v1' + normalizedPath;
+    }
 
     // CORS preflight
     if (request.method === 'OPTIONS') {

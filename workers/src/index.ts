@@ -97,8 +97,13 @@ export default {
         });
       }
 
-      // Route: OpenAI-compatible API
-      if (path.startsWith('/v1/')) {
+      // Route: OpenAI-compatible API (handles /v1/* and fallback /images/generations, /images/edits, or /images/variations)
+      if (
+        path.startsWith('/v1/') ||
+        path === '/images/generations' || path === '/images/generations/' ||
+        path === '/images/edits' || path === '/images/edits/' ||
+        path === '/images/variations' || path === '/images/variations/'
+      ) {
         const openai = new OpenAIEndpoint(env);
         return openai.handle(request);
       }

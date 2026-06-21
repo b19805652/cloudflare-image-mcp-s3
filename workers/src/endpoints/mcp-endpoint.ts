@@ -42,6 +42,7 @@ export class MCPEndpoint {
   async handle(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const pathname = url.pathname;
+    const normalizedPath = pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 
     // Capture worker's base URL from first request (for constructing full image URLs)
     if (!this.workerBaseUrl) {
@@ -51,7 +52,7 @@ export class MCPEndpoint {
     // Derive mode from path
     // - /mcp (default) and /mcp/smart => multi-model
     // - /mcp/simple => single-model (run_model only; model is required via ?model=)
-    if (pathname === '/mcp/simple' || pathname === '/mcp/simple/message') {
+    if (normalizedPath === '/mcp/simple' || normalizedPath === '/mcp/simple/message') {
       this.mode = 'single-model';
       const modelFromQuery = url.searchParams.get('model');
       this.defaultModel = modelFromQuery;
@@ -68,8 +69,8 @@ export class MCPEndpoint {
     }
 
     // GET /mcp* - Return endpoint info (for human-readable API discovery)
-    if (request.method === 'GET' && (pathname === '/mcp' || pathname === '/mcp/smart' || pathname === '/mcp/simple')) {
-      return this.handleInfo(pathname);
+    if (request.method === 'GET' && (normalizedPath === '/mcp' || normalizedPath === '/mcp/smart' || normalizedPath === '/mcp/simple')) {
+      return this.handleInfo(normalizedPath);
     }
 
     // GET for SSE transport connection (?transport=sse)
@@ -81,12 +82,12 @@ export class MCPEndpoint {
     if (
       request.method === 'POST' &&
       (
-        pathname === '/mcp' ||
-        pathname === '/mcp/message' ||
-        pathname === '/mcp/smart' ||
-        pathname === '/mcp/smart/message' ||
-        pathname === '/mcp/simple' ||
-        pathname === '/mcp/simple/message'
+        normalizedPath === '/mcp' ||
+        normalizedPath === '/mcp/message' ||
+        normalizedPath === '/mcp/smart' ||
+        normalizedPath === '/mcp/smart/message' ||
+        normalizedPath === '/mcp/simple' ||
+        normalizedPath === '/mcp/simple/message'
       )
     ) {
       return this.handleMessage(request);
