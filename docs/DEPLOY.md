@@ -11,7 +11,7 @@ This guide covers deploying the Cloudflare Image MCP service to **Cloudflare Wor
 Click the **Fork** button at the top right of this repo to create your own copy.
 
 ```
-https://github.com/tan-yong-sheng/cloudflare-image-mcp → YourAccount/cloudflare-image-mcp
+https://github.com/b19805652/cloudflare-image-mcp-s3 → YourAccount/cloudflare-image-mcp-s3
 ```
 
 ---

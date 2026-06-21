@@ -1,6 +1,6 @@
 # Cloudflare Image MCP
 
-[![Deploy to Cloudflare Workers](https://github.com/tan-yong-sheng/cloudflare-image-mcp/actions/workflows/deploy-workers.yml/badge.svg)](https://github.com/tan-yong-sheng/cloudflare-image-mcp/actions/workflows/deploy-workers.yml)
+[![Deploy to Cloudflare Workers](https://github.com/b19805652/cloudflare-image-mcp-s3/actions/workflows/deploy-workers.yml/badge.svg)](https://github.com/b19805652/cloudflare-image-mcp-s3/actions/workflows/deploy-workers.yml)
 
 OpenAI-compatible image generation API + Streamable HTTP MCP server powered by Cloudflare Workers AI.
 
