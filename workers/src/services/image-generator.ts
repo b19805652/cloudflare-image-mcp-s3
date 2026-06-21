@@ -353,13 +353,16 @@ export class ImageGeneratorService {
     base64Data?: string;
     error?: string;
   }> {
-    const model = this.getModelConfig(modelId);
-    if (!model) {
-      return { success: false, error: `Unknown model: ${modelId}` };
+    let model = this.getModelConfig(modelId);
+    if (!model || !model.supportedTasks.includes('image-to-image')) {
+      const fallbackId = '@cf/stabilityai/stable-diffusion-xl-base-1.0';
+      console.warn(`Model ${modelId} does not support image-to-image. Falling back to ${fallbackId}`);
+      modelId = fallbackId;
+      model = this.getModelConfig(modelId);
     }
 
-    if (!model.supportedTasks.includes('image-to-image')) {
-      return { success: false, error: `Model ${modelId} does not support image-to-image` };
+    if (!model) {
+      return { success: false, error: `Unknown model: ${modelId}` };
     }
 
     if (model.editCapabilities?.mask === 'required') {
@@ -549,13 +552,16 @@ export class ImageGeneratorService {
     base64Data?: string;
     error?: string;
   }> {
-    const model = this.getModelConfig(modelId);
-    if (!model) {
-      return { success: false, error: `Unknown model: ${modelId}` };
+    let model = this.getModelConfig(modelId);
+    if (!model || !model.editCapabilities?.mask) {
+      const fallbackId = '@cf/stabilityai/stable-diffusion-xl-base-1.0';
+      console.warn(`Model ${modelId} does not support mask-based edits. Falling back to ${fallbackId}`);
+      modelId = fallbackId;
+      model = this.getModelConfig(modelId);
     }
 
-    if (!model.editCapabilities?.mask) {
-      return { success: false, error: `Model ${modelId} does not support mask-based edits` };
+    if (!model) {
+      return { success: false, error: `Unknown model: ${modelId}` };
     }
 
     try {
