@@ -11,7 +11,7 @@ OpenAI-compatible image generation API + Streamable HTTP MCP server powered by C
 - **10 Image Generation Models**: FLUX, SDXL, Stable Diffusion, and more
 - **Multiple Tasks**: Text-to-image, image-to-image (masked edits supported)
 - **Web Frontend**: Interactive UI for image generation
-- **R2 Storage**: Auto-expiring image storage with CDN
+- **Self-Hosted MinIO Storage**: Replaces Cloudflare R2 with a self-hosted MinIO instance running on Docker/Coolify with automatic image expiry.
 
 ## 📦 What's Included
 
@@ -201,6 +201,7 @@ Open your worker URL in a browser for an interactive UI.
 | Document | Description |
 |----------|-------------|
 | [Deployment Guide](docs/DEPLOY.md) | **Step-by-step deployment instructions** |
+| [MinIO Deployment Guide](docs/MINIO_DEPLOY.md) | **Self-hosted MinIO & Coolify deployment instructions** |
 | [Credentials Setup](docs/CREDENTIALS_SETUP.md) | Environment variables and API tokens |
 | [Usage Guide](docs/USAGE.md) | Detailed API usage examples |
 | [MCP Guide](docs/MCP.md) | MCP protocol and tools reference |
@@ -238,5 +239,8 @@ MIT
 
 **Built with:**
 - [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)
-- [Cloudflare R2](https://developers.cloudflare.com/r2/)
+- [MinIO / S3 Object Storage](https://min.io/) (Self-hosted replacement for R2)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
+
+**Credits:**
+Migrated to self-hosted MinIO S3 from the original project: [tan-yong-sheng/cloudflare-image-mcp](https://github.com/tan-yong-sheng/cloudflare-image-mcp).

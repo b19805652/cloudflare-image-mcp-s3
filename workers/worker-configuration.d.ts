@@ -3,8 +3,12 @@
 interface Env {
 	IMAGE_EXPIRY_HOURS: 24;
 	CLOUDFLARE_ACCOUNT_ID: string;
-	IMAGE_BUCKET: R2Bucket;
-	AI: Ai;
+	MINIO_ENDPOINT: string;
+	MINIO_ACCESS_KEY_ID: string;
+	MINIO_SECRET_ACCESS_KEY: string;
+	MINIO_BUCKET_NAME: string;
+	MINIO_REGION?: string;
+	MINIO_FORCE_PATH_STYLE?: string;
 	DEPLOYED_AT?: string;
 	COMMIT_SHA?: string;
 }

@@ -117,21 +117,24 @@ export default {
         });
       }
 
-      // Route: Image proxy (serve images from R2 through the worker)
+      // Route: Image proxy (serve images from S3 through the worker)
       if (path.startsWith('/images/')) {
         const imageKey = path.substring(1); // Remove leading slash
         try {
-          const image = await env.IMAGE_BUCKET.get(imageKey);
+          const { S3StorageService } = await import('./services/s3-storage.js');
+          const storage = new S3StorageService(env);
+          const image = await storage.getImageByKey(imageKey);
           if (!image) {
             return new Response('Image not found', { status: 404 });
           }
-          return new Response(image.body, {
+          return new Response(image.data, {
             headers: {
-              'Content-Type': image.httpMetadata?.contentType || 'image/png',
+              'Content-Type': image.contentType || 'image/png',
               'Cache-Control': 'public, max-age=86400',
             },
           });
         } catch (error) {
+          console.error('Error fetching image:', error);
           return new Response('Error fetching image', { status: 500 });
         }
       }

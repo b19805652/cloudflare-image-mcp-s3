@@ -137,7 +137,12 @@ export interface AIAccount {
 
 // Environment interface
 export interface Env {
-  IMAGE_BUCKET: R2Bucket;
+  MINIO_ENDPOINT: string;
+  MINIO_ACCESS_KEY_ID: string;
+  MINIO_SECRET_ACCESS_KEY: string;
+  MINIO_BUCKET_NAME: string;
+  MINIO_REGION?: string;
+  MINIO_FORCE_PATH_STYLE?: string;
   CLOUDFLARE_API_TOKEN: string;
   CLOUDFLARE_ACCOUNT_ID: string;
   IMAGE_EXPIRY_HOURS: string;

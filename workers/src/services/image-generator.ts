@@ -4,12 +4,12 @@
 
 import type { Env, ModelConfig, AIAccount } from '../types.js';
 import { ParamParser } from './param-parser.js';
-import { R2StorageService } from './r2-storage.js';
+import { S3StorageService } from './s3-storage.js';
 import { MODEL_CONFIGS } from '../config/models.js';
 
 export class ImageGeneratorService {
   private aiAccounts: AIAccount[];
-  private storage: R2StorageService;
+  private storage: S3StorageService;
   private models: Map<string, ModelConfig>;
 
   private cleanBase64(data: string): string {
@@ -80,7 +80,7 @@ export class ImageGeneratorService {
   }
 
   constructor(env: Env) {
-    this.storage = new R2StorageService(env);
+    this.storage = new S3StorageService(env);
     this.models = new Map(Object.entries(MODEL_CONFIGS));
 
     // Build AI accounts list:
