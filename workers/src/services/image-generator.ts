@@ -355,7 +355,7 @@ export class ImageGeneratorService {
   }> {
     let model = this.getModelConfig(modelId);
     if (!model || !model.supportedTasks.includes('image-to-image')) {
-      const fallbackId = '@cf/stabilityai/stable-diffusion-xl-base-1.0';
+      const fallbackId = '@cf/runwayml/stable-diffusion-v1-5-img2img';
       console.warn(`Model ${modelId} does not support image-to-image. Falling back to ${fallbackId}`);
       modelId = fallbackId;
       model = this.getModelConfig(modelId);
@@ -554,7 +554,7 @@ export class ImageGeneratorService {
   }> {
     let model = this.getModelConfig(modelId);
     if (!model || !model.editCapabilities?.mask) {
-      const fallbackId = '@cf/stabilityai/stable-diffusion-xl-base-1.0';
+      const fallbackId = '@cf/runwayml/stable-diffusion-v1-5-inpainting';
       console.warn(`Model ${modelId} does not support mask-based edits. Falling back to ${fallbackId}`);
       modelId = fallbackId;
       model = this.getModelConfig(modelId);
