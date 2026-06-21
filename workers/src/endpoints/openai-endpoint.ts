@@ -50,6 +50,9 @@ export class OpenAIEndpoint {
   async handle(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
+    
+    // Normalize path by removing trailing slash if present (except for root '/')
+    const normalizedPath = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
@@ -58,20 +61,20 @@ export class OpenAIEndpoint {
 
     try {
       // Route to handler
-      if (path === '/v1/images/generations' && request.method === 'POST') {
+      if (normalizedPath === '/v1/images/generations' && request.method === 'POST') {
         return this.handleGenerations(request);
       }
-      if (path === '/v1/images/edits' && request.method === 'POST') {
+      if (normalizedPath === '/v1/images/edits' && request.method === 'POST') {
         return this.handleEdits(request);
       }
-      if (path === '/v1/images/variations' && request.method === 'POST') {
+      if (normalizedPath === '/v1/images/variations' && request.method === 'POST') {
         return this.handleVariations(request);
       }
-      if (path === '/v1/models' && request.method === 'GET') {
+      if (normalizedPath === '/v1/models' && request.method === 'GET') {
         return this.handleListModels();
       }
-      if (path.startsWith('/v1/models/') && request.method === 'GET') {
-        const modelId = decodeURIComponent(path.substring('/v1/models/'.length));
+      if (normalizedPath.startsWith('/v1/models/') && request.method === 'GET') {
+        const modelId = decodeURIComponent(normalizedPath.substring('/v1/models/'.length));
         return this.handleDescribeModel(modelId);
       }
 

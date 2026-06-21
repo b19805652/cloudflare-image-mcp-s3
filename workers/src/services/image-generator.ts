@@ -16,6 +16,22 @@ export class ImageGeneratorService {
     return data.replace(/^data:image\/\w+;base64,/, '');
   }
 
+  private async resolveToBase64(input: string): Promise<string> {
+    if (input.startsWith('http://') || input.startsWith('https://')) {
+      try {
+        const res = await fetch(input);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch image from URL: ${input} (Status: ${res.status})`);
+        }
+        const buffer = await res.arrayBuffer();
+        return this.arrayBufferToBase64(buffer);
+      } catch (err) {
+        throw new Error(`Error downloading image from URL "${input}": ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+    return this.cleanBase64(input);
+  }
+
   private async extractImageResult(
     result: unknown
   ): Promise<
@@ -364,13 +380,19 @@ export class ImageGeneratorService {
     }
 
     try {
+      // Resolve all input images (which could be base64 or URLs) to base64
+      const base64Images: string[] = [];
+      for (const img of images) {
+        base64Images.push(await this.resolveToBase64(img));
+      }
+
       // Build explicit params - only include strength if provided
       const mergedExplicit: Record<string, any> = { ...explicitParams };
       if (strength !== undefined) {
         mergedExplicit.strength = strength;
       }
       // For single image, set image param for ParamParser
-      mergedExplicit.image = images[0];
+      mergedExplicit.image = base64Images[0];
 
       // Parse parameters with image
       const params = ParamParser.parse(prompt, mergedExplicit, model);
@@ -378,8 +400,8 @@ export class ImageGeneratorService {
       // Build payload with image
       const payload = ParamParser.toCFPayload(params, model);
 
-      // Run the model via REST API (pass images for multipart handling)
-      const result = await this.runAI(model.id, payload, model, images);
+      // Run the model via REST API (pass resolved images for multipart handling)
+      const result = await this.runAI(model.id, payload, model, base64Images);
 
       const extracted = await this.extractImageResult(result);
       if (!extracted) {
@@ -537,9 +559,12 @@ export class ImageGeneratorService {
     }
 
     try {
+      const base64Image = await this.resolveToBase64(imageData);
+      const base64Mask = await this.resolveToBase64(maskData);
+
       const params = ParamParser.parse(
         prompt,
-        { ...explicitParams, image: imageData, mask: maskData },
+        { ...explicitParams, image: base64Image, mask: base64Mask },
         model
       );
 
