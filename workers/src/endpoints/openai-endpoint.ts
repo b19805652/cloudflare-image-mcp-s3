@@ -82,6 +82,9 @@ export class OpenAIEndpoint {
         const modelId = decodeURIComponent(normalizedPath.substring('/v1/models/'.length));
         return this.handleDescribeModel(modelId);
       }
+      if (normalizedPath === '/v1/chat/completions' && request.method === 'POST') {
+        return this.handleChatCompletions(request);
+      }
 
       return new Response(JSON.stringify({ error: 'Not found' }), {
         status: 404,
@@ -484,6 +487,68 @@ export class OpenAIEndpoint {
     }), {
       headers: { ...this.corsHeaders, 'Content-Type': 'application/json' },
     });
+  }
+  /**
+   * POST /v1/chat/completions
+   * Handles OpenWebUI's image prompt expansion request
+   */
+  private async handleChatCompletions(request: Request): Promise<Response> {
+    try {
+      const body = await request.json() as any;
+      const messages = body.messages || [];
+      const lastMessage = messages[messages.length - 1] || {};
+      const content = lastMessage.content || '';
+
+      // Extract the prompt from the OpenWebUI system/user format
+      // It typically contains "USER: <prompt> \n </chat_history>" near the end
+      let prompt = '';
+      const chatHistoryMatch = content.match(/USER:\s*([\s\S]+?)(?=\s*<\/chat_history>|$)/i);
+      if (chatHistoryMatch) {
+        prompt = chatHistoryMatch[1].trim();
+      } else {
+        const userMatch = content.match(/USER:\s*([^\n]+)/i);
+        if (userMatch) {
+          prompt = userMatch[1].trim();
+        } else {
+          prompt = content.trim();
+        }
+      }
+
+      // OpenWebUI expects choice content to be a JSON string like:
+      // { "prompt": "Your detailed description here." }
+      const responsePrompt = JSON.stringify({ prompt });
+
+      const response = {
+        id: `chatcmpl-${Math.random().toString(36).substring(2, 15)}`,
+        object: 'chat.completion',
+        created: Math.floor(Date.now() / 1000),
+        model: body.model || 'prompt-generator',
+        choices: [
+          {
+            index: 0,
+            message: {
+              role: 'assistant',
+              content: responsePrompt
+            },
+            finish_reason: 'stop'
+          }
+        ],
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 10,
+          total_tokens: 20
+        }
+      };
+
+      return new Response(JSON.stringify(response), {
+        headers: {
+          ...this.corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      return this.errorResponse(error);
+    }
   }
 
   /**
