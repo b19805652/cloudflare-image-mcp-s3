@@ -15,71 +15,7 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Temporary request logging to MinIO
-    if (request.method === 'POST') {
-      try {
-        const clone = request.clone();
-        const contentType = clone.headers.get('content-type') || '';
-        let bodyInfo = '';
-        if (contentType.includes('application/json')) {
-          bodyInfo = await clone.text();
-        } else if (contentType.includes('multipart/form-data')) {
-          const formData = await clone.formData();
-          const keys: string[] = [];
-          formData.forEach((_, key) => {
-            if (!keys.includes(key)) keys.push(key);
-          });
-          bodyInfo = `Multipart keys: ${keys.join(', ')}`;
-          for (const key of keys) {
-            const val = formData.get(key);
-            if (val && typeof val === 'object' && 'size' in val) {
-              bodyInfo += `\n- File key="${key}", name="${(val as any).name}", size=${(val as any).size}, type="${(val as any).type}"`;
-            } else {
-              bodyInfo += `\n- Text key="${key}", value="${String(val).substring(0, 500)}"`;
-            }
-          }
-        } else {
-          bodyInfo = `Other body type: ${contentType}`;
-        }
 
-        const headersObj: Record<string, string> = {};
-        request.headers.forEach((value, key) => {
-          headersObj[key] = value;
-        });
-
-        const logContent = `Time: ${new Date().toISOString()}
-Method: ${request.method}
-Path: ${path}
-Headers: ${JSON.stringify(headersObj, null, 2)}
-BodyInfo:
-${bodyInfo}`;
-
-        const { S3Client, PutObjectCommand } = await import('@aws-sdk/client-s3');
-        const s3 = new S3Client({
-          endpoint: env.MINIO_ENDPOINT,
-          region: env.MINIO_REGION || 'us-east-1',
-          credentials: {
-            accessKeyId: env.MINIO_ACCESS_KEY_ID,
-            secretAccessKey: env.MINIO_SECRET_ACCESS_KEY,
-          },
-          forcePathStyle: env.MINIO_FORCE_PATH_STYLE === 'true' || true,
-        });
-        const bucketName = env.MINIO_BUCKET_NAME || 'image-generation';
-        
-        const timestamp = Date.now();
-        const logKey = `logs/${timestamp}-${Math.random().toString(36).substring(2, 6)}.txt`;
-        await s3.send(
-          new PutObjectCommand({
-            Bucket: bucketName,
-            Key: logKey,
-            Body: new TextEncoder().encode(logContent),
-            ContentType: 'text/plain',
-          })
-        );
-      } catch (logErr) {
-        console.error('Failed to upload log:', logErr);
-      }
-    }
 
     // CORS headers for all responses
     const corsHeaders = {
